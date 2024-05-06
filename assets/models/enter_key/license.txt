@@ -1,0 +1,11 @@
+Model Information:
+* title:	Enter key
+* source:	https://sketchfab.com/3d-models/enter-key-020d0054804b43b8a94b1690238761bf
+* author:	18mv047 (https://sketchfab.com/18mv047)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Enter key" (https://sketchfab.com/3d-models/enter-key-020d0054804b43b8a94b1690238761bf) by 18mv047 (https://sketchfab.com/18mv047) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

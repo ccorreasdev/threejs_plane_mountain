@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script defer src="https://kit.fontawesome.com/d57fe6f602.js" crossorigin="anonymous"></script>
+
+    <script defer type="importmap">
+        {
+            "imports": {
+                "three": "./assets/js/build/three.module.js",
+                "three/addons/": "./assets/js/jsm/"
+            }
+        }
+    </script>
+    <script defer type="module" src="./assets/js/script.js"></script>
+    <title>Three JS</title>
+</head>
+
+<body class="layout">
+    <div id="posicion" class="video__container">
+        GOOGLE
+    </div>
+    <div id="posicion2" class="video__container2">
+        CHAT GPT
+    </div>
+    <section id="canvas" class="canvas"></section>
+
+    <div id="controls" class="controls__layout">
+        <div class="top">
+            <div id="descend" class="controls__item"><i class="fa-solid fa-arrow-down-short-wide"></i></div>
+            <div id="up" class="controls__item"><i class="fa-solid fa-arrow-up"></i></div>
+            <div id="ascend" class="controls__item"><i class="fa-solid fa-arrow-up-short-wide"></i></div>
+        </div>
+        <div class="bottom">
+            <div id="left" class="controls__item"><i class="fa-solid fa-arrow-left"></i></div>
+            <div id="down" class="controls__item"><i class="fa-solid fa-arrow-down"></i></div>
+            <div id="right" class="controls__item"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
+    </div>
+</body>
+
+</html>

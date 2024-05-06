@@ -1,0 +1,124 @@
+@font-face {
+    font-family: "Montserrat";
+    src: url("../font/Montserrat/Montserrat-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Bugatti";
+    src: url("../font/Bugatti/Bugatti.woff2");
+}
+
+:root {
+    --bg-color: #343434;
+    --text-color: #d8d8d6;
+    --primary-color: #61697B;
+    --secondary-color: #381C47;
+    --secondary-color-a: rgba(56, 28, 71, 0.4);
+    --bg-color-1: #0992a4;
+    --bg-color-2: #0a61d4;
+    --bg-color-3: #313a45;
+    --bg-color-4: #252f38;
+}
+
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {}
+
+.layout {
+    width: 100%;
+    height: 100vh;
+    color: var(--text-color);
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    font-size: 1.8rem;
+    font-weight: 400;
+    font-family: 'Bugatti', 'Montserrat', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: black;
+}
+
+.video__container {
+    position: absolute;
+    top: 0px;
+    bottom: 50%;
+    left: 0px;
+    width: 90px;
+    height: 50%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #b57e00;
+    cursor: pointer;
+}
+
+.video__container2 {
+    position: absolute;
+    top: 50%;
+    bottom: 0px;
+    left: 0px;
+    width: 90px;
+    height: 50%;
+    background-color: rgb(12, 82, 233);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+
+    cursor: pointer;
+}
+
+.canvas {
+    width: 100%;
+    max-height: 100vh;
+    pointer-events: none;
+}
+
+.controls__layout {
+    bottom: 0px;
+    left: calc(50% - 100px);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.controls__item {
+    width: 80px;
+    height: 80px;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Pixel Small Super Mario
+* source:	https://sketchfab.com/3d-models/pixel-small-super-mario-a225d9cf3c83479683285895c9e30f28
+* author:	fortbonnitar (https://sketchfab.com/fortbonnitar)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Pixel Small Super Mario" (https://sketchfab.com/3d-models/pixel-small-super-mario-a225d9cf3c83479683285895c9e30f28) by fortbonnitar (https://sketchfab.com/fortbonnitar) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
