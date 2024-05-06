@@ -12,6 +12,7 @@ let lights = new Lights();
 let keyListener = new KeyListener();
 
 //CONSTANTS AND VARIABLES
+
 const posicion = document.querySelector("#posicion");
 const posicion2 = document.querySelector("#posicion2");
 const progressBar = document.querySelector("#progress-bar");
@@ -214,7 +215,7 @@ const animate = () => {
 
 
 
-    const speed = 8;
+    const speed = 14;
     // Actualiza la posición del objeto y la cámara
     if (model2) {
         keyListener.getKeysPressed().forEach((key) => {
@@ -246,7 +247,7 @@ const animate = () => {
                 isShooting = true;
                 setTimeout(() => {
                     isShooting = false;
-                }, 2000)
+                }, 500)
             }
         });
 

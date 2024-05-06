@@ -4,6 +4,7 @@ const goLeft = document.querySelector("#left");
 const goRight = document.querySelector("#right");
 const goAscend = document.querySelector("#ascend");
 const goDescend = document.querySelector("#descend");
+const shot = document.querySelector("#shot");
 
 export default class TouchControls {
 
@@ -88,6 +89,20 @@ export default class TouchControls {
 
         goDescend.addEventListener("touchend", (e) => {
             const index = keysPressed.indexOf("q");
+            if (index !== -1) {
+                keysPressed.splice(index, 1);
+            }
+        })
+
+        shot.addEventListener("touchstart", (e) => {
+
+            if (!keysPressed.includes(" ")) {
+                keysPressed.push(" ");
+            }
+        })
+
+        shot.addEventListener("touchend", (e) => {
+            const index = keysPressed.indexOf(" ");
             if (index !== -1) {
                 keysPressed.splice(index, 1);
             }
