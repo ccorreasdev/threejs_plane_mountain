@@ -24,14 +24,14 @@ const goRight = document.querySelector("#right");
 const goAscend = document.querySelector("#ascend");
 const goDescend = document.querySelector("#descend");
 
-goUp.addEventListener("mousedown", (e) => {
+goUp.addEventListener("touchstart", (e) => {
 
     if (!keysPressed.includes("w")) {
         keysPressed.push("w");
     }
 })
 
-goUp.addEventListener("mouseup", (e) => {
+goUp.addEventListener("touchend", (e) => {
     const index = keysPressed.indexOf("w");
     if (index !== -1) {
         keysPressed.splice(index, 1);
