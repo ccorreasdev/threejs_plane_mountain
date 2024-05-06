@@ -1,113 +1,29 @@
 //IMPORTS
 import * as THREE from "./build/three.module.js";
-import { GLTFLoader } from "./jsm/loaders/GLTFLoader.js"
-import { OrbitControls } from "./jsm/controls/OrbitControls.js";
-
+import Master from "./class/Master.js";
+import TouchControls from "./class/TouchControls.js";
+import Models from "./class/Model.js";
+import Lights from "./class/Lights.js";
+import KeyListener from "./class/KeyListener.js";
+let master = new Master();
+let touchControls = new TouchControls();
+let models = new Models();
+let lights = new Lights();
+let keyListener = new KeyListener();
 
 //CONSTANTS AND VARIABLES
 const posicion = document.querySelector("#posicion");
 const posicion2 = document.querySelector("#posicion2");
 const progressBar = document.querySelector("#progress-bar");
 const canvas = document.querySelector("#canvas");
-let camera, scene, renderer, mixer, controls;
+let mixer;
 let model1, model2, model3, model4, model5, model6, model7;
 let isEnterZone = false;
 let isEnterZoneGPT = false;
 let isShooting = false;
 let actionModel1, actionModel2, actionModel3, actionModel4;
-let keysPressed = [];
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-const goUp = document.querySelector("#up");
-const goDown = document.querySelector("#down");
-const goLeft = document.querySelector("#left");
-const goRight = document.querySelector("#right");
-const goAscend = document.querySelector("#ascend");
-const goDescend = document.querySelector("#descend");
-
-goUp.addEventListener("touchstart", (e) => {
-
-    if (!keysPressed.includes("w")) {
-        keysPressed.push("w");
-    }
-})
-
-goUp.addEventListener("touchend", (e) => {
-    const index = keysPressed.indexOf("w");
-    if (index !== -1) {
-        keysPressed.splice(index, 1);
-    }
-})
-
-goDown.addEventListener("touchstart", (e) => {
-
-    if (!keysPressed.includes("s")) {
-        keysPressed.push("s");
-    }
-})
-
-goDown.addEventListener("touchend", (e) => {
-    const index = keysPressed.indexOf("s");
-    if (index !== -1) {
-        keysPressed.splice(index, 1);
-    }
-})
-
-goLeft.addEventListener("touchstart", (e) => {
-
-    if (!keysPressed.includes("a")) {
-        keysPressed.push("a");
-    }
-})
-
-goLeft.addEventListener("touchend", (e) => {
-    const index = keysPressed.indexOf("a");
-    if (index !== -1) {
-        keysPressed.splice(index, 1);
-    }
-})
-
-goRight.addEventListener("touchstart", (e) => {
-
-    if (!keysPressed.includes("d")) {
-        keysPressed.push("d");
-    }
-})
-
-goRight.addEventListener("touchend", (e) => {
-    const index = keysPressed.indexOf("d");
-    if (index !== -1) {
-        keysPressed.splice(index, 1);
-    }
-})
-
-goAscend.addEventListener("touchstart", (e) => {
-
-    if (!keysPressed.includes("e")) {
-        keysPressed.push("e");
-    }
-})
-
-goAscend.addEventListener("touchend", (e) => {
-    const index = keysPressed.indexOf("e");
-    if (index !== -1) {
-        keysPressed.splice(index, 1);
-    }
-})
-
-goDescend.addEventListener("touchstart", (e) => {
-
-    if (!keysPressed.includes("q")) {
-        keysPressed.push("q");
-    }
-})
-
-goDescend.addEventListener("touchend", (e) => {
-    const index = keysPressed.indexOf("q");
-    if (index !== -1) {
-        keysPressed.splice(index, 1);
-    }
-})
 
 
 posicion2.addEventListener("click", (e) => {
@@ -127,16 +43,16 @@ const scaleValue = (value, minInput, maxInput, minOutput, maxOutput) => {
 const onWindowResize = () => {
     const width = window.innerWidth;
     const height = window.innerHeight;
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
+    master.camera.aspect = width / height;
+    master.camera.updateProjectionMatrix();
+    master.renderer.setSize(width, height);
 };
 
 const onMouseClick = (event) => {
     event.preventDefault();
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
+    raycaster.setFrommaster.camera(mouse, master.camera);
     const intersects = raycaster.intersectObjects(scene.children, true);
 
     if (intersects.length > 0) {
@@ -158,60 +74,8 @@ const onMouseMove = (e) => {
     const posY = scaleValue(mouseY, 0, window.innerHeight, 0, 100);
 }
 
-const loadModelGLTF = (modelURL) => {
-    const loader = new GLTFLoader();
 
-    return new Promise((resolve, reject) => {
-        loader.load(
-            `./assets/models/${modelURL}/scene.gltf`,
-            function (gltf) {
 
-                const container = new THREE.Group();
-                container.add(gltf.scene);
-
-                // Se resuelve la promesa con el modelo y las animaciones
-                resolve(container);
-            },
-            function (xhr) {
-                // La función de progreso (puede ser vacía o implementada según sea necesario)
-            },
-            function (error) {
-                // Se llama a reject en caso de error
-                reject(error);
-            }
-        );
-    });
-};
-
-const loadModelGLTFAnimated = (modelURL) => {
-    const loader = new GLTFLoader();
-
-    return new Promise((resolve, reject) => {
-        loader.load(
-            `./assets/models/${modelURL}/scene.gltf`,
-            function (gltf) {
-
-                mixer = new THREE.AnimationMixer(gltf.scene);
-                const container = new THREE.Group();
-                container.add(gltf.scene);
-
-                // Se resuelve la promesa con el modelo y las animaciones
-                resolve({
-                    model: container,
-                    animations: gltf.animations,
-                    mixer: mixer // Se pasa también el mixer para controlar las animaciones
-                });
-            },
-            function (xhr) {
-                // La función de progreso (puede ser vacía o implementada según sea necesario)
-            },
-            function (error) {
-                // Se llama a reject en caso de error
-                reject(error);
-            }
-        );
-    });
-};
 
 
 
@@ -223,140 +87,110 @@ const init = async () => {
     window.addEventListener("resize", onWindowResize);
     window.addEventListener('click', onMouseClick);
 
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 4000);
-    camera.position.set(0, 1.5, 5);
-    camera.lookAt(0, 0, 0);
-    scene = new THREE.Scene();
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(0, 2000, 1000);
-    directionalLight.lookAt(0, 0, 0);
-    directionalLight.intensity = 6;
-    scene.add(directionalLight);
-    const ambientlight = new THREE.AmbientLight(0xffffff, 1);
-    ambientlight.position.set(0, 0, 0);
-    ambientlight.intensity = 1;
-    scene.add(ambientlight);
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    canvas.appendChild(renderer.domElement);
 
+    keyListener.init();
 
-    // Crear e inicializar los controles de órbita
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // Habilitar amortiguación del movimiento
-    controls.dampingFactor = 0.25; // Factor de amortiguación
-    controls.rotateSpeed = 0.35; // Velocidad de rotación
-    controls.zoomSpeed = 0.5; // Velocidad de zoom
-    controls.enablePan = false; // Deshabilitar el pan
+    touchControls.initTouchControls(keyListener.getKeysPressed());
 
-    await loadModelGLTFAnimated("plane").then((resolve) => {
+    master.initCamera(60, window.innerWidth / window.innerHeight, 0.1, 4000);
+    master.camera.position.set(0, 1.5, 5);
+    master.camera.lookAt(0, 0, 0);
+
+    master.initScene();
+
+    lights.initLights(4, 1);
+
+    master.scene.add(lights.getDirectionalLight());
+    master.scene.add(lights.getAmbientLight());
+
+    master.initRenderer();
+    master.renderer.setPixelRatio(window.devicePixelRatio);
+    master.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    canvas.appendChild(master.renderer.domElement);
+
+    master.initOrbitControls();
+
+    models = new Models();
+
+    await models.loadModelGLTFAnimation("plane").then((resolve) => {
         model1 = resolve;
-        return loadModelGLTFAnimated("birds");
+        return models.loadModelGLTFAnimation("birds");
     }).then((resolve) => {
         model2 = resolve;
-        return loadModelGLTF("mountains");
+        return models.loadModelGLTF("mountains");
     }).then((resolve) => {
         model3 = resolve;
-        return loadModelGLTF("enter_key");
+        return models.loadModelGLTF("enter_key");
     }).then((resolve) => {
         model4 = resolve;
-        return loadModelGLTF("zone");
+        return models.loadModelGLTF("zone");
     }).then((resolve) => {
         model5 = resolve;
-        return loadModelGLTF("chatgpt");
+        return models.loadModelGLTF("chatgpt");
     }).then((resolve) => {
         model6 = resolve;
-        return loadModelGLTF("spacial_misile")
+        return models.loadModelGLTF("spacial_misile")
     }).then((resolve) => {
         model7 = resolve;
     })
 
-    model1.mixer.clipAction(model1.animations[0]).play();
-    model1.model.scale.set(1, 1, 1)
-    model1.model.position.x = -2;
-    model1.model.position.y = 376;
-    model1.model.position.z = -374;
-    model1.model.rotation.y = (0 * Math.PI) / 180;
-    scene.add(model1.model);
+    models.getLoadedModels(0).mixer.clipAction(model1.animations[0]).play();
+    models.getLoadedModels(0).model.scale.set(1, 1, 1)
+    models.getLoadedModels(0).model.position.x = -2;
+    models.getLoadedModels(0).model.position.y = 376;
+    models.getLoadedModels(0).model.position.z = -374;
+    models.getLoadedModels(0).model.rotation.y = (0 * Math.PI) / 180;
+    master.scene.add(models.getLoadedModels(0).model);
 
-    model2.mixer.clipAction(model2.animations[0]).play();
-    model2.model.scale.set(1, 1, 1);
-    model2.model.rotation.y = (0 * Math.PI) / 180;
-    model2.model.position.x = 60
-    model2.model.position.y = 376;
-    model2.model.position.z = -149
-    scene.add(model2.model);
+    models.getLoadedModels(1).mixer.clipAction(model2.animations[0]).play();
+    models.getLoadedModels(1).model.scale.set(1, 1, 1);
+    models.getLoadedModels(1).model.rotation.y = (0 * Math.PI) / 180;
+    models.getLoadedModels(1).model.position.x = 60
+    models.getLoadedModels(1).model.position.y = 376;
+    models.getLoadedModels(1).model.position.z = -149
+    master.scene.add(models.getLoadedModels(1).model);
 
-    model3.scale.set(500, 500, 500);
-    model3.rotation.y = (180 * Math.PI) / 180;
-    model3.position.y = 0;
-    model3.position.z = 0;
-    scene.add(model3);
+    models.getLoadedModels(2).scale.set(500, 500, 500);
+    models.getLoadedModels(2).rotation.y = (180 * Math.PI) / 180;
+    models.getLoadedModels(2).position.y = 0;
+    models.getLoadedModels(2).position.z = 0;
+    master.scene.add(models.getLoadedModels(2));
 
+    models.getLoadedModels(3).scale.set(0.5, 0.5, .05);
+    models.getLoadedModels(3).rotation.y = (180 * Math.PI) / 180;
+    models.getLoadedModels(3).position.x = 62;
+    models.getLoadedModels(3).position.y = 375;
+    models.getLoadedModels(3).position.z = -144
+    master.scene.add(models.getLoadedModels(3));
 
-    model4.scale.set(0.5, 0.5, .05);
-    model4.rotation.y = (180 * Math.PI) / 180;
-    model4.position.x = 62;
-    model4.position.y = 375;
-    model4.position.z = -144
-    scene.add(model4);
+    models.getLoadedModels(4).scale.set(10, 10, 10);
+    models.getLoadedModels(4).rotation.y = (90 * Math.PI) / 180;
+    models.getLoadedModels(4).position.x = 62;
+    models.getLoadedModels(4).position.y = 360;
+    models.getLoadedModels(4).position.z = -144
+    master.scene.add(models.getLoadedModels(4));
 
-    model5.scale.set(10, 10, 10);
-    model5.rotation.y = (90 * Math.PI) / 180;
-    model5.position.x = 62;
-    model5.position.y = 360;
-    model5.position.z = -144
-    scene.add(model5);
+    models.getLoadedModels(5).scale.set(10, 10, 10);
+    models.getLoadedModels(5).rotation.y = (90 * Math.PI) / 180;
+    models.getLoadedModels(5).position.x = -100;
+    models.getLoadedModels(5).position.y = 360;
+    models.getLoadedModels(5).position.z = -144
+    master.scene.add(models.getLoadedModels(5));
 
-    model6.scale.set(10, 10, 10);
-    model6.rotation.y = (90 * Math.PI) / 180;
-    model6.position.x = -100;
-    model6.position.y = 360;
-    model6.position.z = -144
-    scene.add(model6);
+    models.getLoadedModels(6).scale.set(0.05, 0.05, 0.05);
+    models.getLoadedModels(6).rotation.x = (90 * Math.PI) / 180;
+    models.getLoadedModels(6).position.x = -100;
+    models.getLoadedModels(6).position.y = 360;
+    models.getLoadedModels(6).position.z = -144
+    master.scene.add(models.getLoadedModels(6));
 
-    model7.scale.set(0.05, 0.05, 0.05);
-
-    model7.rotation.x = (90 * Math.PI) / 180;
-    model7.position.x = -100;
-    model7.position.y = 360;
-    model7.position.z = -144
-    scene.add(model7);
-
-
-    document.addEventListener("keydown", function (event) {
-        // El código de la tecla presionada está en event.keyCode o event.key
-        // Aquí puedes hacer algo en respuesta a la pulsación de tecla
-        console.log("Tecla presionada:", event.key);
-        if (!keysPressed.includes(event.key)) {
-            keysPressed.push(event.key);
-        }
-
-    })
-
-
-    // Función para manejar el evento de soltar una tecla
-    document.addEventListener("keyup", function (event) {
-        // Remueve la tecla soltada del array
-        const index = keysPressed.indexOf(event.key);
-        if (index !== -1) {
-            if (keysPressed[index] === "Enter" && isEnterZone) {
-                window.open("https://www.google.es")
-            }
-
-            if (keysPressed[index] === "Enter" && isEnterZoneGPT) {
-                window.open("https://chatgpt.com")
-            }
-            keysPressed.splice(index, 1);
-        }
-    });
 
 };
 
 
 const render = () => {
-    renderer.render(scene, camera);
+    master.renderer.render(master.scene, master.camera);
 };
 
 const animate = () => {
@@ -364,7 +198,7 @@ const animate = () => {
     const speed = 8;
     // Actualiza la posición del objeto y la cámara
     if (model2) {
-        keysPressed.forEach((key) => {
+        keyListener.getKeysPressed().forEach((key) => {
             // Mover hacia adelante (eje Z positivo)
 
             if (key === "w") {
@@ -408,11 +242,13 @@ const animate = () => {
             objectPosition.y + 1.5,
             objectPosition.z - distance
         );
-        camera.position.copy(cameraPosition);
-        camera.lookAt(objectPosition);
+        master.camera.position.copy(cameraPosition);
+        master.camera.lookAt(objectPosition);
     }
 
     //controls.update();
+
+
     if (model1.mixer) {
         model1.mixer.update(0.01);
     }
@@ -422,8 +258,8 @@ const animate = () => {
     }
 
 
-    const distance = camera.position.distanceTo(model2.model.position);
-    const distanceGPT = camera.position.distanceTo(model6.position);
+    const distance = master.camera.position.distanceTo(model2.model.position);
+    const distanceGPT = master.camera.position.distanceTo(model6.position);
 
     // Define un rango de distancia para que el objeto aparezca
     const minDistance = 30; // Ajusta según sea necesario
@@ -477,7 +313,7 @@ const createGround = () => {
     groundMesh.position.y = 0;
 
     // Agregar el suelo a la escena
-    scene.add(groundMesh);
+    master.scene.add(groundMesh);
 }
 
 init();
