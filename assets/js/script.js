@@ -10,9 +10,10 @@ const posicion2 = document.querySelector("#posicion2");
 const progressBar = document.querySelector("#progress-bar");
 const canvas = document.querySelector("#canvas");
 let camera, scene, renderer, mixer, controls;
-let model1, model2, model3, model4, model5, model6;
+let model1, model2, model3, model4, model5, model6, model7;
 let isEnterZone = false;
 let isEnterZoneGPT = false;
+let isShooting = false;
 let actionModel1, actionModel2, actionModel3, actionModel4;
 let keysPressed = [];
 const raycaster = new THREE.Raycaster();
@@ -266,6 +267,9 @@ const init = async () => {
         return loadModelGLTF("chatgpt");
     }).then((resolve) => {
         model6 = resolve;
+        return loadModelGLTF("spacial_misile")
+    }).then((resolve) => {
+        model7 = resolve;
     })
 
     model1.mixer.clipAction(model1.animations[0]).play();
@@ -312,6 +316,13 @@ const init = async () => {
     model6.position.z = -144
     scene.add(model6);
 
+    model7.scale.set(0.05, 0.05, 0.05);
+
+    model7.rotation.x = (90 * Math.PI) / 180;
+    model7.position.x = -100;
+    model7.position.y = 360;
+    model7.position.z = -144
+    scene.add(model7);
 
 
     document.addEventListener("keydown", function (event) {
@@ -378,6 +389,12 @@ const animate = () => {
             if (key === "q") {
                 model1.model.position.y -= 0.2 * speed; // Mueve hacia la derecha
             }
+            if (key === " " && !isShooting) {
+                isShooting = true;
+                setTimeout(() => {
+                    isShooting = false;
+                }, 2000)
+            }
         });
 
 
@@ -430,7 +447,14 @@ const animate = () => {
     }
 
 
-    console.log(model1.model.position);
+    if (isShooting) {
+
+        model7.position.z += 1;
+    } else {
+        model7.position.copy(model1.model.position);
+    }
+
+    //console.log(model1.model.position);
 
     render();
 };
@@ -459,4 +483,5 @@ const createGround = () => {
 init();
 //createGround();
 animate();
+
 
