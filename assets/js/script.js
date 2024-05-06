@@ -38,70 +38,70 @@ goUp.addEventListener("touchend", (e) => {
     }
 })
 
-goDown.addEventListener("mousedown", (e) => {
+goDown.addEventListener("touchstart", (e) => {
 
     if (!keysPressed.includes("s")) {
         keysPressed.push("s");
     }
 })
 
-goDown.addEventListener("mouseup", (e) => {
+goDown.addEventListener("touchend", (e) => {
     const index = keysPressed.indexOf("s");
     if (index !== -1) {
         keysPressed.splice(index, 1);
     }
 })
 
-goLeft.addEventListener("mousedown", (e) => {
+goLeft.addEventListener("touchstart", (e) => {
 
     if (!keysPressed.includes("a")) {
         keysPressed.push("a");
     }
 })
 
-goLeft.addEventListener("mouseup", (e) => {
+goLeft.addEventListener("touchend", (e) => {
     const index = keysPressed.indexOf("a");
     if (index !== -1) {
         keysPressed.splice(index, 1);
     }
 })
 
-goRight.addEventListener("mousedown", (e) => {
+goRight.addEventListener("touchstart", (e) => {
 
     if (!keysPressed.includes("d")) {
         keysPressed.push("d");
     }
 })
 
-goRight.addEventListener("mouseup", (e) => {
+goRight.addEventListener("touchend", (e) => {
     const index = keysPressed.indexOf("d");
     if (index !== -1) {
         keysPressed.splice(index, 1);
     }
 })
 
-goAscend.addEventListener("mousedown", (e) => {
+goAscend.addEventListener("touchstart", (e) => {
 
     if (!keysPressed.includes("e")) {
         keysPressed.push("e");
     }
 })
 
-goAscend.addEventListener("mouseup", (e) => {
+goAscend.addEventListener("touchend", (e) => {
     const index = keysPressed.indexOf("e");
     if (index !== -1) {
         keysPressed.splice(index, 1);
     }
 })
 
-goDescend.addEventListener("mousedown", (e) => {
+goDescend.addEventListener("touchstart", (e) => {
 
     if (!keysPressed.includes("q")) {
         keysPressed.push("q");
     }
 })
 
-goDescend.addEventListener("mouseup", (e) => {
+goDescend.addEventListener("touchend", (e) => {
     const index = keysPressed.indexOf("q");
     if (index !== -1) {
         keysPressed.splice(index, 1);
@@ -270,9 +270,9 @@ const init = async () => {
 
     model1.mixer.clipAction(model1.animations[0]).play();
     model1.model.scale.set(1, 1, 1)
-    model1.model.position.x = 60
+    model1.model.position.x = -2;
     model1.model.position.y = 376;
-    model1.model.position.z = -148
+    model1.model.position.z = -374;
     model1.model.rotation.y = (0 * Math.PI) / 180;
     scene.add(model1.model);
 
@@ -430,7 +430,7 @@ const animate = () => {
     }
 
 
-
+    console.log(model1.model.position);
 
     render();
 };
