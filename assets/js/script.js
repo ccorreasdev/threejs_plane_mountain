@@ -115,25 +115,41 @@ const init = async () => {
 
     await models.loadModelGLTFAnimation("plane").then((resolve) => {
         model1 = resolve;
+        models.percentLoaded = 15;
+        progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTFAnimation("birds");
     }).then((resolve) => {
         model2 = resolve;
+        models.percentLoaded = 30;
+        progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("mountains");
     }).then((resolve) => {
         model3 = resolve;
+        models.percentLoaded = 45;
+        progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("enter_key");
     }).then((resolve) => {
         model4 = resolve;
+        models.percentLoaded = 60;
+        progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("zone");
     }).then((resolve) => {
         model5 = resolve;
+        models.percentLoaded = 75;
+        progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("chatgpt");
     }).then((resolve) => {
         model6 = resolve;
+        models.percentLoaded = 90;
+        progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("spacial_misile")
     }).then((resolve) => {
         model7 = resolve;
+        models.percentLoaded = 100;
+        progressBar.innerHTML = models.percentLoaded + "%";
     })
+
+    console.log(models.percentLoaded);
 
     models.getLoadedModels(0).mixer.clipAction(model1.animations[0]).play();
     models.getLoadedModels(0).model.scale.set(1, 1, 1)
@@ -195,6 +211,9 @@ const render = () => {
 
 const animate = () => {
     requestAnimationFrame(animate);
+
+
+
     const speed = 8;
     // Actualiza la posición del objeto y la cámara
     if (model2) {
@@ -290,34 +309,11 @@ const animate = () => {
         model7.position.copy(model1.model.position);
     }
 
-    //console.log(model1.model.position);
-
     render();
 };
 
 
-const createGround = () => {
-    // Crear geometría del suelo
-    const groundGeometry = new THREE.PlaneGeometry(100, 100); // Tamaño del suelo (ancho, largo)
-
-    // Crear material del suelo (puedes ajustar los parámetros según tus necesidades)
-    const groundMaterial = new THREE.MeshBasicMaterial({ color: 0xfefefe, side: THREE.DoubleSide });
-
-    // Crear el mesh del suelo
-    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-
-    // Rotar el suelo para que esté horizontal
-    groundMesh.rotation.x = -Math.PI / 2; // Rotación en radianes
-
-    // Colocar el suelo en la altura 0
-    groundMesh.position.y = 0;
-
-    // Agregar el suelo a la escena
-    master.scene.add(groundMesh);
-}
-
 init();
-//createGround();
 animate();
 
 

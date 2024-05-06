@@ -45,6 +45,11 @@ body {}
     background-color: black;
 }
 
+.progress__bar {
+    position: absolute;
+    right: 0px;
+}
+
 .video__container {
 
     width: 90px;

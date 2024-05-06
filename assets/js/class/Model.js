@@ -4,6 +4,7 @@ import { GLTFLoader } from "../jsm/loaders/GLTFLoader.js"
 export default class Models {
 
     static loadedModels = [];
+    static percentLoaded = 0;
 
     getLoadedModels(index) {
         return Models.loadedModels[index];
