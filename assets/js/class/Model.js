@@ -22,7 +22,6 @@ export default class Models {
                     resolve(container);
                 },
                 function (xhr) {
-
                 },
                 function (error) {
                     reject(error);
@@ -52,10 +51,9 @@ export default class Models {
                     });
                 },
                 function (xhr) {
-                    // La función de progreso (puede ser vacía o implementada según sea necesario)
+
                 },
                 function (error) {
-                    // Se llama a reject en caso de error
                     reject(error);
                 }
             );

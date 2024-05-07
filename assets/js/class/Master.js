@@ -8,6 +8,10 @@ export default class Master {
     mixer;
     orbitControls;
 
+    getCamera() {
+        return this.camera;
+    }
+
     initCamera(verticalField, aspectRation, nearPlane, farPlane) {
         this.camera = new THREE.PerspectiveCamera(verticalField, aspectRation, nearPlane, farPlane);
     }

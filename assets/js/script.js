@@ -1,102 +1,39 @@
-//IMPORTS
+//Imports
 import * as THREE from "./build/three.module.js";
 import Master from "./class/Master.js";
 import TouchControls from "./class/TouchControls.js";
 import Models from "./class/Model.js";
 import Lights from "./class/Lights.js";
 import KeyListener from "./class/KeyListener.js";
+import MouseMove from "./class/MouseMove.js";
+import ScrollWindow from "./class/ScrollWindow.js";
+import ModelMovement from "./class/ModelMovement.js";
+import { htmlActionsListener } from "./class/HTMLActions.js";
+//Constants and variables
+const canvas = document.querySelector("#canvas");
+const progressBar = document.querySelector("#progress-bar");
+
 let master = new Master();
 let touchControls = new TouchControls();
 let models = new Models();
 let lights = new Lights();
 let keyListener = new KeyListener();
-
-//CONSTANTS AND VARIABLES
-
-const posicion = document.querySelector("#posicion");
-const posicion2 = document.querySelector("#posicion2");
-const progressBar = document.querySelector("#progress-bar");
-const canvas = document.querySelector("#canvas");
-let mixer;
+let modelMovement = new ModelMovement();
+let mouseMove = new MouseMove();
+let scrollWindow = new ScrollWindow();
 let model1, model2, model3, model4, model5, model6, model7;
 let isEnterZone = false;
 let isEnterZoneGPT = false;
 let isShooting = false;
-let actionModel1, actionModel2, actionModel3, actionModel4;
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-
-posicion2.addEventListener("click", (e) => {
-    gsap.to(model1.model.position, { duration: 1, x: -100, y: 376, z: -144 });
-});
-
-
-posicion.addEventListener("click", (e) => {
-
-    gsap.to(model1.model.position, { duration: 1, x: 60, y: 376, z: -148 });
-});
-//FUNCTIONS
-const scaleValue = (value, minInput, maxInput, minOutput, maxOutput) => {
-    return minOutput + (maxOutput - minOutput) * ((value - minInput) / (maxInput - minInput));
-}
-
-const onWindowResize = () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    master.camera.aspect = width / height;
-    master.camera.updateProjectionMatrix();
-    master.renderer.setSize(width, height);
-};
-
-const onMouseClick = (event) => {
-    event.preventDefault();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFrommaster.camera(mouse, master.camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-
-    if (intersects.length > 0) {
-        const selectedObject = intersects[0].object;
-        console.log(selectedObject);
-    }
-}
-
-const onScroll = (e) => {
-    const scrollY = window.scrollY || window.pageYOffset;
-    const scrollMaxY = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollProgress = scrollY / scrollMaxY;
-};
-
-const onMouseMove = (e) => {
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    const posX = scaleValue(mouseX, 0, window.innerWidth, 0, 100);
-    const posY = scaleValue(mouseY, 0, window.innerHeight, 0, 100);
-}
-
-
 
 
 
 
 const init = async () => {
-
-
-    window.addEventListener("scroll", onScroll);
-    document.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("resize", onWindowResize);
-    window.addEventListener('click', onMouseClick);
-
-
-    keyListener.init();
-
-    touchControls.initTouchControls(keyListener.getKeysPressed());
-
+    //Init master - Camera, scene, lights, renderer...
     master.initCamera(60, window.innerWidth / window.innerHeight, 0.1, 4000);
     master.camera.position.set(0, 1.5, 5);
     master.camera.lookAt(0, 0, 0);
-
     master.initScene();
 
     lights.initLights(4, 1);
@@ -112,6 +49,7 @@ const init = async () => {
 
     master.initOrbitControls();
 
+    //Load 3D Models
     models = new Models();
 
     await models.loadModelGLTFAnimation("plane").then((resolve) => {
@@ -150,8 +88,7 @@ const init = async () => {
         progressBar.innerHTML = models.percentLoaded + "%";
     })
 
-    console.log(models.percentLoaded);
-
+    //Add to scene 3D Models
     models.getLoadedModels(0).mixer.clipAction(model1.animations[0]).play();
     models.getLoadedModels(0).model.scale.set(1, 1, 1)
     models.getLoadedModels(0).model.position.x = -2;
@@ -202,55 +139,30 @@ const init = async () => {
     models.getLoadedModels(6).position.z = -144
     master.scene.add(models.getLoadedModels(6));
 
-
+    //Listeners
+    //windowResizeListener(master);
+    mouseMove.mouseMoveListener();
+    scrollWindow.scrollListener();
+    keyListener.init();
+    touchControls.initTouchControls(keyListener.getKeysPressed());
+    htmlActionsListener(models.getLoadedModels(1));
 };
 
 
+//Render scene
 const render = () => {
     master.renderer.render(master.scene, master.camera);
 };
 
+//Animate scene
 const animate = () => {
     requestAnimationFrame(animate);
-
-
 
     const speed = 14;
     // Actualiza la posición del objeto y la cámara
     if (model2) {
-        keyListener.getKeysPressed().forEach((key) => {
-            // Mover hacia adelante (eje Z positivo)
 
-            if (key === "w") {
-                model1.model.position.z += 0.1 * speed; // Mueve hacia adelante
-            }
-            // Mover hacia atrás (eje Z negativo)
-            if (key === "s") {
-                model1.model.position.z -= 0.1 * speed; // Mueve hacia atrás
-            }
-            // Mover hacia la izquierda (eje X negativo)
-            if (key === "a") {
-                model1.model.position.x += 0.2 * speed; // Mueve hacia la izquierda
-            }
-            // Mover hacia la derecha (eje X positivo)
-            if (key === "d") {
-                model1.model.position.x -= 0.2 * speed; // Mueve hacia la derecha
-            }
-            if (key === "e") {
-                model1.model.position.y += 0.2 * speed; // Mueve hacia la izquierda
-            }
-            // Mover hacia la derecha (eje X positivo)
-            if (key === "q") {
-                model1.model.position.y -= 0.2 * speed; // Mueve hacia la derecha
-            }
-            if (key === " " && !isShooting) {
-                isShooting = true;
-                setTimeout(() => {
-                    isShooting = false;
-                }, 500)
-            }
-        });
-
+        modelMovement.moveModel(keyListener, models.getLoadedModels(0), 14);
 
         //console.log(model1.model.position)
 
