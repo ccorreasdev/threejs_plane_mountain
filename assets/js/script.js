@@ -10,6 +10,7 @@ import ScrollWindow from "./class/ScrollWindow.js";
 import ModelMovement from "./class/ModelMovement.js";
 import { htmlActionsListener } from "./class/HTMLActions.js";
 import { calculateDistance } from "./class/Distances.js";
+import { windowResizeListener } from "./class/WindowResize.js"
 
 //Constants and variables
 const canvas = document.querySelector("#canvas");
@@ -127,7 +128,7 @@ const init = async () => {
     master.scene.add(models.getLoadedModels(6));
 
     //Listeners
-    //windowResizeListener(master);
+    windowResizeListener(master);
     mouseMove.mouseMoveListener();
     scrollWindow.scrollListener();
     keyListener.init();

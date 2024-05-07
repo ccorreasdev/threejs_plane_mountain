@@ -7,7 +7,7 @@ export default class KeyListener {
 
     init() {
         document.addEventListener("keydown", function (event) {
-            console.log("Tecla presionada:", event.key);
+            //console.log("Tecla presionada:", event.key);
             if (!KeyListener.keysPressed.includes(event.key)) {
                 KeyListener.keysPressed.push(event.key);
             }

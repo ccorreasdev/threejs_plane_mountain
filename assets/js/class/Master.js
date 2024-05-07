@@ -2,11 +2,19 @@ import * as THREE from "../build/three.module.js";
 import { OrbitControls } from "../jsm/controls/OrbitControls.js";
 
 export default class Master {
-    camera;
-    scene;
-    renderer;
+    static camera;
+    static scene;
+    static renderer;
     mixer;
     orbitControls;
+
+    setAspectRatio(aspectRatio) {
+        this.camera.aspect(aspectRatio)
+    }
+
+    setRendererSize(width, height) {
+        Master.renderer.setSize(width, height);
+    }
 
     getCamera() {
         return this.camera;

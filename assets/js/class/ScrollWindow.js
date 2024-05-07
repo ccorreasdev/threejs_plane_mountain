@@ -12,7 +12,7 @@ export default class ScrollWindow {
             const scrollY = window.scrollY || window.pageYOffset;
             const scrollMaxY = document.documentElement.scrollHeight - window.innerHeight;
             this.scrollProgress = scrollY / scrollMaxY;
-            console.log(this.getScrollProgress());
+            //console.log(this.getScrollProgress());
         });
     };
 

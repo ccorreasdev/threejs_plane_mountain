@@ -21,7 +21,7 @@ export default class MouseMove {
             const mouseY = e.clientY;
             this.posX = scaleValue.scaleValue(mouseX, 0, window.innerWidth, -50, 50);
             this.posY = scaleValue.scaleValue(mouseY, 0, window.innerHeight, -50, 50);
-            console.log(this.getMousePosition());
+            //console.log(this.getMousePosition());
         });
     }
 
