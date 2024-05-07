@@ -22,13 +22,6 @@ let keyListener = new KeyListener();
 let modelMovement = new ModelMovement();
 let mouseMove = new MouseMove();
 let scrollWindow = new ScrollWindow();
-let model1, model2, model3, model4, model5, model6, model7;
-let isEnterZoneGoogle = false;
-let isEnterZoneGPT = false;
-let isShooting = false;
-
-
-
 
 const init = async () => {
     //Init master - Camera, scene, lights, renderer...
@@ -54,37 +47,30 @@ const init = async () => {
     models = new Models();
 
     await models.loadModelGLTFAnimation("plane").then((resolve) => {
-        model1 = resolve;
         models.percentLoaded = 15;
         progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTFAnimation("birds");
     }).then((resolve) => {
-        model2 = resolve;
         models.percentLoaded = 30;
         progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("mountains");
     }).then((resolve) => {
-        model3 = resolve;
         models.percentLoaded = 45;
         progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("enter_key");
     }).then((resolve) => {
-        model4 = resolve;
         models.percentLoaded = 60;
         progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("zone");
     }).then((resolve) => {
-        model5 = resolve;
         models.percentLoaded = 75;
         progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("chatgpt");
     }).then((resolve) => {
-        model6 = resolve;
         models.percentLoaded = 90;
         progressBar.innerHTML = models.percentLoaded + "%";
         return models.loadModelGLTF("spacial_misile")
     }).then((resolve) => {
-        model7 = resolve;
         models.percentLoaded = 100;
         progressBar.innerHTML = models.percentLoaded + "%";
     })
@@ -147,7 +133,6 @@ const init = async () => {
     keyListener.init();
     touchControls.initTouchControls(keyListener.getKeysPressed());
     htmlActionsListener(0);
-
 };
 
 
@@ -185,34 +170,9 @@ const animate = () => {
         }
 
         //Distances from other models
-        distance = master.camera.position.distanceTo(models.getLoadedModels(1).model.position);
-        const distanceGPT = master.camera.position.distanceTo(models.getLoadedModels(5).position);
-
-        // Define un rango de distancia para que el objeto aparezca
-        const minDistance = 30;
-        if (distance < minDistance) {
-            isEnterZoneGoogle = true;
-            console.log("GOOGLE");
-
-        } else {
-            isEnterZoneGoogle = false;
-
-        }
-
-        if (distanceGPT < minDistance) {
-            isEnterZoneGPT = true;
-
-
-        } else {
-            isEnterZoneGPT = false;
-
-        }
-
-
-
-
-
+        calculateDistance(master.camera.position, models.getLoadedModels(4).position, models.getLoadedModels(5).position);
     }
+
     render();
 };
 
