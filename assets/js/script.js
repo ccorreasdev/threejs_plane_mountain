@@ -9,10 +9,11 @@ import MouseMove from "./class/MouseMove.js";
 import ScrollWindow from "./class/ScrollWindow.js";
 import ModelMovement from "./class/ModelMovement.js";
 import { htmlActionsListener } from "./class/HTMLActions.js";
+import { calculateDistance } from "./class/Distances.js";
+
 //Constants and variables
 const canvas = document.querySelector("#canvas");
 const progressBar = document.querySelector("#progress-bar");
-
 let master = new Master();
 let touchControls = new TouchControls();
 let models = new Models();
@@ -22,7 +23,7 @@ let modelMovement = new ModelMovement();
 let mouseMove = new MouseMove();
 let scrollWindow = new ScrollWindow();
 let model1, model2, model3, model4, model5, model6, model7;
-let isEnterZone = false;
+let isEnterZoneGoogle = false;
 let isEnterZoneGPT = false;
 let isShooting = false;
 
@@ -89,7 +90,7 @@ const init = async () => {
     })
 
     //Add to scene 3D Models
-    models.getLoadedModels(0).mixer.clipAction(model1.animations[0]).play();
+    models.getLoadedModels(0).mixer.clipAction(models.getLoadedModels(0).animations[0]).play();
     models.getLoadedModels(0).model.scale.set(1, 1, 1)
     models.getLoadedModels(0).model.position.x = -2;
     models.getLoadedModels(0).model.position.y = 376;
@@ -97,7 +98,7 @@ const init = async () => {
     models.getLoadedModels(0).model.rotation.y = (0 * Math.PI) / 180;
     master.scene.add(models.getLoadedModels(0).model);
 
-    models.getLoadedModels(1).mixer.clipAction(model2.animations[0]).play();
+    models.getLoadedModels(1).mixer.clipAction(models.getLoadedModels(1).animations[0]).play();
     models.getLoadedModels(1).model.scale.set(1, 1, 1);
     models.getLoadedModels(1).model.rotation.y = (0 * Math.PI) / 180;
     models.getLoadedModels(1).model.position.x = 60
@@ -145,7 +146,8 @@ const init = async () => {
     scrollWindow.scrollListener();
     keyListener.init();
     touchControls.initTouchControls(keyListener.getKeysPressed());
-    htmlActionsListener(models.getLoadedModels(1));
+    htmlActionsListener(0);
+
 };
 
 
@@ -158,70 +160,59 @@ const render = () => {
 const animate = () => {
     requestAnimationFrame(animate);
 
-    const speed = 14;
-    // Actualiza la posición del objeto y la cámara
-    if (model2) {
+    //Wait last model is loaded
+    if (models.getLoadedModels(6)) {
 
+        //Movement controller model 1 - Plane
         modelMovement.moveModel(keyListener, models.getLoadedModels(0), 14);
 
-        //console.log(model1.model.position)
-
-        // Actualiza la posición de la cámara para seguir al objeto
-        const distance = 4; // Distancia detrás del objeto
-        const objectPosition = model1.model.position;
+        //Camera follow 3D model 1 - plane
+        let distance = 3.5;
+        const objectPosition = models.getLoadedModels(0).model.position;
         const cameraPosition = new THREE.Vector3(
             objectPosition.x,
             objectPosition.y + 1.5,
             objectPosition.z - distance
         );
+
         master.camera.position.copy(cameraPosition);
         master.camera.lookAt(objectPosition);
+
+        //Animations mixer
+        if (models.getLoadedModels(0) && models.getLoadedModels(1)) {
+            models.getLoadedModels(0).mixer.update(0.01);
+            models.getLoadedModels(1).mixer.update(0.01);
+        }
+
+        //Distances from other models
+        distance = master.camera.position.distanceTo(models.getLoadedModels(1).model.position);
+        const distanceGPT = master.camera.position.distanceTo(models.getLoadedModels(5).position);
+
+        // Define un rango de distancia para que el objeto aparezca
+        const minDistance = 30;
+        if (distance < minDistance) {
+            isEnterZoneGoogle = true;
+            console.log("GOOGLE");
+
+        } else {
+            isEnterZoneGoogle = false;
+
+        }
+
+        if (distanceGPT < minDistance) {
+            isEnterZoneGPT = true;
+
+
+        } else {
+            isEnterZoneGPT = false;
+
+        }
+
+
+
+
+
     }
-
-    //controls.update();
-
-
-    if (model1.mixer) {
-        model1.mixer.update(0.01);
-    }
-
-    if (model2.mixer) {
-        model2.mixer.update(0.01);
-    }
-
-
-    const distance = master.camera.position.distanceTo(model2.model.position);
-    const distanceGPT = master.camera.position.distanceTo(model6.position);
-
-    // Define un rango de distancia para que el objeto aparezca
-    const minDistance = 30; // Ajusta según sea necesario
-    //console.log(distance);
-    if (distance < minDistance) {
-        isEnterZone = true;
-
-
-    } else {
-        isEnterZone = false;
-
-    }
-
-    if (distanceGPT < minDistance) {
-        isEnterZoneGPT = true;
-
-
-    } else {
-        isEnterZoneGPT = false;
-
-    }
-
-
-    if (isShooting) {
-
-        model7.position.z += 1;
-    } else {
-        model7.position.copy(model1.model.position);
-    }
-
     render();
 };
 

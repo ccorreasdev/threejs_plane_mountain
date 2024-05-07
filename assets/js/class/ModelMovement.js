@@ -1,41 +1,30 @@
-
 export default class ModelMovement {
-
 
     moveModel(keyListener, model, speed) {
         keyListener.getKeysPressed().forEach((key) => {
-            // Mover hacia adelante (eje Z positivo)
-
             if (key === "w") {
-                model.model.position.z += 0.1 * speed; // Mueve hacia adelante
+                model.model.position.z += 0.1 * speed;
             }
-            // Mover hacia atrás (eje Z negativo)
+
             if (key === "s") {
-                model.model.position.z -= 0.1 * speed; // Mueve hacia atrás
+                model.model.position.z -= 0.1 * speed;
             }
-            // Mover hacia la izquierda (eje X negativo)
+
             if (key === "a") {
-                model.model.position.x += 0.2 * speed; // Mueve hacia la izquierda
+                model.model.position.x += 0.2 * speed;
             }
-            // Mover hacia la derecha (eje X positivo)
+
             if (key === "d") {
-                model.model.position.x -= 0.2 * speed; // Mueve hacia la derecha
+                model.model.position.x -= 0.2 * speed;
             }
             if (key === "e") {
-                model.model.position.y += 0.2 * speed; // Mueve hacia la izquierda
+                model.model.position.y += 0.2 * speed;
             }
-            // Mover hacia la derecha (eje X positivo)
+
             if (key === "q") {
-                model.model.position.y -= 0.2 * speed; // Mueve hacia la derecha
+                model.model.position.y -= 0.2 * speed;
             }
-            // if (key === " " && !isShooting) {
-            //     isShooting = true;
-            //     setTimeout(() => {
-            //         isShooting = false;
-            //     }, 500)
-            // }
         });
     }
-
 
 }

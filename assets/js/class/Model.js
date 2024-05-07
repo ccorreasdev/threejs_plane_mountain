@@ -6,6 +6,10 @@ export default class Models {
     static loadedModels = [];
     static percentLoaded = 0;
 
+    setPositionModel(index, x, y, z) {
+        Models.loadedModels[index].position.set(x, y, z);
+    }
+
     getLoadedModels(index) {
         return Models.loadedModels[index];
     }
